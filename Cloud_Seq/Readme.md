@@ -32,7 +32,6 @@ This component streamlines loading, arranging, and sequencing pointclouds in Tou
     - The camera’s forward direction is computed using its position (`uCamPos`) and a look-at target (`uLookAtPos`):
         
         ```glsl
-        glsl
         vec3 computeForwardFromLookAt(vec3 camPos, vec3 lookAtPos) {
             return normalize(lookAtPos - camPos);
         }
@@ -45,8 +44,6 @@ This component streamlines loading, arranging, and sequencing pointclouds in Tou
     - For depth ≥ 0, blend attributes between the disappearing and incoming scans using a smoothstep function between `uBlendNear` and `uBlendFar` thresholds:
         
         ```glsl
-        glsl
-        CopyEdit
         float ComputeBlendWeight(float depth) {
             return smoothstep(uBlendNear, uBlendFar, depth);
         }
