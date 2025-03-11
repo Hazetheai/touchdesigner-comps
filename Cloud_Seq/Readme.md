@@ -1,8 +1,10 @@
-# Cloud Sequencer Component (.tox) Documentation**
+# Cloud Sequencer Component (.tox) Documentation
 
 ## Overview
 
 This component streamlines loading, arranging, and sequencing pointclouds in TouchDesigner. It imports normalized .ply files, arranges them in a layout texture, and performs LOD-style selection from two textures. It supports dynamic blending between pointclouds, enabling continuous pointcloud paths.
+
+[Motivation and examples](https://auratyk.com/community/cloud-seq/)
 
 **Features**
 
@@ -24,7 +26,7 @@ This component streamlines loading, arranging, and sequencing pointclouds in Tou
     
 
 ## Technical Details
-
+> This core logic is run on a shader inside the comp.
 1. **Determine Particle Roles:**
     - A boolean (e.g., via a uniform `uSwap`) determines which scan is “disappearing” (structure preserved) and which is “incoming” (blended in).
     - Particle data is read from two corresponding textures.
@@ -56,19 +58,22 @@ This component streamlines loading, arranging, and sequencing pointclouds in Tou
 ## Typical Workflow
 
 1. **Load Pointclouds:**
-    - Add .ply files in the provided PLY_Cloud components.
+    - Add .ply files in the provided PLY_Cloud components. (Inside the Cloud_Seq component)
+    
+        This is a manual process. Copy Paste the “PLY_Cloud…” comp, add your ply file and connect the first wire to the switch_pos TOP. The second wire will be added automatically.
 2. **Arrange Pointclouds:**
-    - Use Layout Mode to view a downscaled layout.
+    - Use Layout Mode to view a downscaled layout of up to 4 clouds.
     - Adjust transform parameters in PLY_Cloud comps to spatially align pointclouds.
 3. **Sequencing Setup:**
-    - Position the camera at the sequence start.
+    - Position the camera where you would like it to be at the start of the sequence.
     - Initialize the sequencer:
         - Set desired pointclouds and reset Cloud* parameters.
-        - Define the blend start depth with `uBlendNear`.
+        - Define the LOD distance with Blend Near.
 4. **Transitioning Pointclouds:**
-    - As the camera moves along your chosen path, update the sequencer:
-        - When the incoming scan is fully visible, record a step (e.g., “Preserve A/B” reversed).
-        - At key points (e.g., 25% through the incoming cloud), record another step (e.g., “Scan A Switch” reversed) to swap roles.
-    - Continue alternating between scans (e.g., A → B → C) as needed.
+    - As the camera moves along your chosen path, you will need to update the sequencer:
+        - The cloud you want to "disappear" (Structure preserved - set by "Preserve A/ B")
+        - The cloud you want to "appear" (Gradually Revealed)
+    - Continue alternating between scans (e.g., A → B → A) as needed.
+    Typically you would go from A0 → B0 → A1 → B1 → A0 etc
 5. **Camera Path Integration:**
     - Optionally bind the camera path to the sequencer’s Progress parameter to drive transitions dynamically.
